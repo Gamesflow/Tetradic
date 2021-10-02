@@ -1,0 +1,479 @@
+
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+
+  <meta charset="UTF-8">
+  
+<link rel="apple-touch-icon" type="image/png" href="https://i.ibb.co/852XnXC/Icon.png" />
+<meta name="apple-mobile-web-app-title" content="Cooli">
+
+<link rel="shortcut icon" type="image/x-icon" href="https://i.ibb.co/852XnXC/Icon.png" />
+
+<link rel="mask-icon" type="" href="https://i.ibb.co/852XnXC/Icon.png" />
+
+
+  <title>Tetradic Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+
+  
+  
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Shrikhand&display=swap");
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	height: 100%;
+}
+
+body {
+	--text-color: hsl(0, 0%, 95%);
+	--bg-color: hsl(0, 0%, 5%);
+	--highlight-color: hsl(60, 100%, 50%);
+
+	display: grid;
+	place-items: center;
+	font-family: "Shrikhand", sans-serif;
+	font-size: max(5vmin, 1.25rem);
+	color: var(--text-color);
+	background-color: var(--bg-color);
+	perspective: 40rem;
+	overflow: hidden;
+}
+
+.info-container {
+	position: fixed;
+	top: 2rem;
+	left: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	padding: 1rem;
+	transform: translateZ(0);
+}
+
+.info-container.active {
+	-webkit-animation: bounce 500ms cubic-bezier(0.25, 1, 0.5, 1);
+	        animation: bounce 500ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@-webkit-keyframes bounce {
+	25% {
+		transform: translateY(-10%) scale(1.1);
+	}
+	50% {
+		transform: translateY(5%) scale(0.95);
+	}
+	70% {
+		transform: translateY(-2%) scale(1.02);
+	}
+	85% {
+		transform: translateY(2%) scale(0.98);
+	}
+	95% {
+		transform: translateY(1%);
+	}
+}
+
+@keyframes bounce {
+	25% {
+		transform: translateY(-10%) scale(1.1);
+	}
+	50% {
+		transform: translateY(5%) scale(0.95);
+	}
+	70% {
+		transform: translateY(-2%) scale(1.02);
+	}
+	85% {
+		transform: translateY(2%) scale(0.98);
+	}
+	95% {
+		transform: translateY(1%);
+	}
+}
+
+.pads-container {
+	--pad-size: 45vmin;
+	--shadow-color: hsla(0, 0%, 0%, 0.2);
+	--shadow-y: 0;
+	--ease: cubic-bezier(0.16, 1, 0.3, 1);
+	--focus-color: hsla(0, 0%, 0%, 0.1);
+	--focus-size: 2vmin;
+	--game-rotation: translateZ(0);
+
+	position: relative;
+	display: grid;
+	grid-gap: 4vmin;
+	grid-template-columns: 1fr 1fr;
+	padding: 1vmin;
+	touch-action: manipulation;
+	transform: scale(0.8);
+	transition: transform var(--speed) var(--ease);
+}
+
+.pads-container.play {
+	transform: var(--game-rotation);
+}
+
+.pads-container.play .pad {
+	pointer-events: auto;
+}
+
+.cap {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: auto;
+	padding: 2vmin;
+	width: 50%;
+	height: 50%;
+	background-color: var(--bg-color);
+	border-radius: 50%;
+	box-shadow: hsla(0, 0%, 0%, 0.05) 0 0 0 1vmin,
+		hsla(0, 0%, 0%, 0.1) 0 0 2vmin 3vmin;
+}
+
+.pad {
+	position: relative;
+	cursor: pointer;
+	width: var(--pad-size);
+	height: var(--pad-size);
+	border: none;
+	background-color: var(--color);
+	border-radius: 5vmin;
+	pointer-events: none;
+	box-shadow: inset hsla(0, 0%, 10%, 0.25) 0 0 6vmin 1vmin,
+		var(--shadow-color) 0 var(--shadow-y) 0, var(--color) 0 var(--shadow-y) 0;
+	transform-origin: center bottom;
+	transform: translateY(var(--push));
+	transition: 200ms var(--ease);
+	transition-property: transform, box-shadow;
+}
+
+.pad::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: hsl(0, 0%, 0%, 0.5);
+	border-radius: inherit;
+	opacity: 0;
+	transition: opacity var(--speed) var(--ease);
+}
+
+.pad:nth-of-type(1) {
+	--focus-position: 100% 100%;
+	border-top-left-radius: 100%;
+}
+.pad:nth-of-type(2) {
+	--focus-position: 0 100%;
+	border-top-right-radius: 100%;
+}
+.pad:nth-of-type(3) {
+	--focus-position: 100% 0;
+	border-bottom-left-radius: 100%;
+}
+.pad:nth-of-type(4) {
+	--focus-position: 0 0;
+	border-bottom-right-radius: 100%;
+}
+
+.pad:focus,
+.pad:focus-visible {
+	outline: none;
+}
+
+.pad:focus-visible {
+	background-image: repeating-radial-gradient(
+		circle at var(--focus-position),
+		var(--focus-color),
+		var(--focus-color) var(--focus-size),
+		transparent var(--focus-size),
+		transparent calc(var(--focus-size) * 2)
+	);
+}
+
+.pad:active {
+	background-image: none;
+}
+
+.pad:active::before,
+.pad.active::before {
+	opacity: 1;
+	transition-duration: calc(var(--speed) / 4);
+}
+
+.btn {
+	color: white;
+	background-color: transparent;
+	border: 2px solid transparent;
+	font-family: inherit;
+	font-size: inherit;
+	outline: none;
+	text-align: center;
+	cursor: pointer;
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	    -ms-user-select: none;
+	        user-select: none;
+	z-index: 1;
+}
+
+.btn:focus-visible {
+	border-color: var(--highlight-color);
+}
+
+.btn:active {
+	transform: scale(0.98);
+}
+
+.btn:disabled {
+	opacity: 0.1;
+	pointer-events: none;
+}
+
+.btn.start-game {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	font-size: max(7vmin, 0.75rem);
+}
+
+.btn.sound-control {
+	position: fixed;
+	top: 0.5rem;
+	right: 0.5rem;
+	font-size: 1rem;
+}
+
+.btn.sound-control svg {
+	fill: currentcolor;
+	width: 1.5rem;
+}
+
+.btn.sound-control .sound-off {
+	display: none;
+}
+
+.btn.sound-control.mute .sound-on {
+	display: none;
+}
+
+.btn.sound-control.mute .sound-off {
+	display: block;
+}
+
+@media (min-width: 400px) {
+	.pads-container {
+		--pad-size: 35vmin;
+		--offset: 1vmin;
+		--shadow-y: var(--offset);
+	}
+
+	.pads-container.play {
+		--game-rotation: translateY(-8vmin) rotateX(45deg) rotateZ(25deg);
+	}
+
+	.pad {
+		--pad-size: 35vmin;
+	}
+
+	.pads-container.play .pad {
+		--shadow-y: 1vmin;
+		--push: calc(var(--offset) - var(--shadow-y));
+	}
+
+	.pads-container.play .pad:active {
+		--shadow-y: 0.5vmin;
+	}
+
+	.pads-container.play .pad:active,
+	.pads-container.play .pad.active {
+		--shadow-color: hsla(0, 0%, 0%, 0.5);
+	}
+}
+</style>
+
+  
+  
+  
+  
+
+</head>
+
+<body translate="no" >
+  <div class="info-container">Start New Game</div>
+<div class="pads-container">
+  <button class="pad" data-pad="#1E00FF" data-sound="pad1" style="--color: #1E00FF" disabled="disabled"></button>
+  <button class="pad" data-pad="#FF0061" data-sound="pad2" style="--color: #FF0061" disabled="disabled"></button>
+  <button class="pad" data-pad="#E1FF00" data-sound="pad3" style="--color: #E1FF00" disabled="disabled"></button>
+  <button class="pad" data-pad="#00FF9E" data-sound="pad4" style="--color: #00FF9E" disabled="disabled"></button>
+  <div class="cap">
+    <button class="btn start-game">Start</button>
+  </div>
+</div>
+<button class="btn sound-control" aria-label="Toggle sound">
+  <svg class="sound-on" viewBox="0 0 576 512" width="100">
+    <path d="M215.03 71.05L126.06 160H24c-13.26 0-24 10.74-24 24v144c0 13.25 10.74 24 24 24h102.06l88.97 88.95c15.03 15.03 40.97 4.47 40.97-16.97V88.02c0-21.46-25.96-31.98-40.97-16.97zm233.32-51.08c-11.17-7.33-26.18-4.24-33.51 6.95-7.34 11.17-4.22 26.18 6.95 33.51 66.27 43.49 105.82 116.6 105.82 195.58 0 78.98-39.55 152.09-105.82 195.58-11.17 7.32-14.29 22.34-6.95 33.5 7.04 10.71 21.93 14.56 33.51 6.95C528.27 439.58 576 351.33 576 256S528.27 72.43 448.35 19.97zM480 256c0-63.53-32.06-121.94-85.77-156.24-11.19-7.14-26.03-3.82-33.12 7.46s-3.78 26.21 7.41 33.36C408.27 165.97 432 209.11 432 256s-23.73 90.03-63.48 115.42c-11.19 7.14-14.5 22.07-7.41 33.36 6.51 10.36 21.12 15.14 33.12 7.46C447.94 377.94 480 319.54 480 256zm-141.77-76.87c-11.58-6.33-26.19-2.16-32.61 9.45-6.39 11.61-2.16 26.2 9.45 32.61C327.98 228.28 336 241.63 336 256c0 14.38-8.02 27.72-20.92 34.81-11.61 6.41-15.84 21-9.45 32.61 6.43 11.66 21.05 15.8 32.61 9.45 28.23-15.55 45.77-45 45.77-76.88s-17.54-61.32-45.78-76.86z"></path>
+  </svg>
+  <svg class="sound-off" viewBox="0 0 512 512" width="100">
+    <path d="M215.03 71.05L126.06 160H24c-13.26 0-24 10.74-24 24v144c0 13.25 10.74 24 24 24h102.06l88.97 88.95c15.03 15.03 40.97 4.47 40.97-16.97V88.02c0-21.46-25.96-31.98-40.97-16.97zM461.64 256l45.64-45.64c6.3-6.3 6.3-16.52 0-22.82l-22.82-22.82c-6.3-6.3-16.52-6.3-22.82 0L416 210.36l-45.64-45.64c-6.3-6.3-16.52-6.3-22.82 0l-22.82 22.82c-6.3 6.3-6.3 16.52 0 22.82L370.36 256l-45.63 45.63c-6.3 6.3-6.3 16.52 0 22.82l22.82 22.82c6.3 6.3 16.52 6.3 22.82 0L416 301.64l45.64 45.64c6.3 6.3 16.52 6.3 22.82 0l22.82-22.82c6.3-6.3 6.3-16.52 0-22.82L461.64 256z"></path>
+  </svg>
+</button>
+  
+  
+      <script id="rendered-js" >
+const assetUrl = "https://assets.codepen.io/225363/";
+const btnStart = document.querySelector(".start-game");
+const btnSound = document.querySelector(".sound-control");
+const padsContainer = document.querySelector(".pads-container");
+const pads = padsContainer.querySelectorAll(".pad");
+const colors = [...pads].map((pad) => pad.dataset.pad);
+const infoContainer = document.querySelector(".info-container");
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContext();
+
+const sounds = {
+	pad1: new Audio(`${assetUrl}pad1.mp3`),
+	pad2: new Audio(`${assetUrl}pad2.mp3`),
+	pad3: new Audio(`${assetUrl}pad3.mp3`),
+	pad4: new Audio(`${assetUrl}pad4.mp3`),
+	miss: new Audio(`${assetUrl}miss.mp3`)
+};
+
+const cls = {
+	active: "active",
+	play: "play",
+	wait: "wait",
+	mute: "mute"
+};
+
+let sequence = [];
+let isAudioMuted = false;
+let step, speed;
+
+const addSequenceStep = () => {
+	sequence.push(colors[Math.floor(Math.random() * colors.length)]);
+};
+
+const handlePadClick = (e) => {
+	if (e.target.dataset.pad === sequence[step]) {
+		!isAudioMuted && handlePadSound(e.target.dataset.sound);
+		step++;
+	} else {
+		!isAudioMuted && handlePadSound("miss");
+		endGame();
+	}
+
+	if (step === sequence.length) {
+		waitPlayerTurn(true);
+		updateInfoText(`Level ${sequence.length + 1}`);
+		setTimeout(() => startLevel(), speed);
+	}
+};
+
+const handlePadSound = (sound) => {
+	if (!sounds[sound].paused) {
+		sounds[sound].pause();
+		sounds[sound].currentTime = 0;
+	}
+	sounds[sound].play();
+};
+
+const endGame = () => {
+	waitPlayerTurn(true);
+	updateInfoText(`Game over at level ${sequence.length}`);
+	padsContainer.classList.remove(cls.play);
+	btnStart.disabled = false;
+};
+
+const animatePad = (name) => {
+	const pad = document.querySelector(`[data-pad="${name}"]`);
+
+	pad.classList.add(cls.active);
+	!isAudioMuted && handlePadSound(pad.dataset.sound);
+	setTimeout(() => pad.classList.remove(cls.active), speed / 2);
+};
+
+const runSequence = () => {
+	sequence.forEach((step, i) => {
+		setTimeout(() => animatePad(step), (i + 1) * speed);
+	});
+};
+
+const startLevel = () => {
+	if (speed > 250) {
+		speed -= sequence.length * 3;
+	}
+
+	step = 0;
+	addSequenceStep();
+	runSequence();
+	setTimeout(() => waitPlayerTurn(false), (sequence.length + 1) * speed);
+};
+
+const startNewGame = () => {
+	btnStart.disabled = true;
+	sequence = [];
+	speed = 500;
+	padsContainer.classList.add(cls.play);
+	padsContainer.style.setProperty("--speed", speed + "ms");
+	waitPlayerTurn(true);
+	updateInfoText("Level 1");
+	startLevel();
+};
+
+const updateInfoText = (text) => {
+	infoContainer.textContent = text;
+	infoContainer.classList.add(cls.active);
+	setTimeout(() => infoContainer.classList.remove(cls.active), speed);
+};
+
+const waitPlayerTurn = (waiting) => {
+	waiting
+		? [...pads].forEach((pad) => (pad.disabled = true))
+		: [...pads].forEach((pad) => (pad.disabled = false));
+};
+
+btnStart.addEventListener("click", startNewGame);
+
+btnSound.addEventListener("click", () => {
+	if (btnSound.classList.contains("mute")) {
+		btnSound.classList.remove(cls.mute);
+		isAudioMuted = false;
+	} else {
+		btnSound.classList.add(cls.mute);
+		isAudioMuted = true;
+	}
+});
+
+padsContainer.addEventListener("click", (e) => {
+	if (e.target.classList.contains("pad")) {
+		handlePadClick(e);
+	}
+});
+    </script>
+
+  
+
+</body>
+
+</html>
+ 
