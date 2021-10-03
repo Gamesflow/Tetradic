@@ -225,6 +225,11 @@ body {
 .btn:disabled {
   opacity: 0.1;
   pointer-events: none;
+  -webkit-animation: none !important;
+  -moz-animation: none !important;
+  -o-animation: none !important;
+  -ms-animation: none !important;
+  animation: none !important;
 }
 
 .btn.start-game {
@@ -232,7 +237,16 @@ body {
   height: 100%;
   border-radius: 50%;
   font-size: max(7vmin, 0.75rem);
+  transition: color 0.5s;
+  -webkit-animation: breathing 4s ease-out infinite normal;
+    animation: breathing 4s ease-out infinite normal;
 }
+
+.btn.start-game:hover{
+  color: #fadf2f;
+  
+}
+
 
 .btn.sound-control {
   position: fixed;
@@ -285,5 +299,57 @@ body {
   .pads-container.play .pad:active,
   .pads-container.play .pad.active {
     --shadow-color: hsla(0, 0%, 0%, 0.5);
+  }
+}
+
+
+
+/* Breathing Animation  */
+@-webkit-keyframes breathing {
+  0% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+
+  25% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+
+  60% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+
+  100% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+}
+
+
+@keyframes breathing {
+  0% {
+    -webkit-transform: scale(0.9);
+    -ms-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+
+  25% {
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+  }
+
+  60% {
+    -webkit-transform: scale(0.9);
+    -ms-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+
+  100% {
+    -webkit-transform: scale(0.9);
+    -ms-transform: scale(0.9);
+    transform: scale(0.9);
   }
 }
