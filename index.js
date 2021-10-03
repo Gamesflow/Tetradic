@@ -8,6 +8,17 @@ const infoContainer = document.querySelector(".info-container");
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();
 
+document.querySelectorAll("*").forEach(e => {
+	e.addEventListener("contextmenu", e => {
+		e.stopPropagation()
+		e.preventDefault()
+	})
+	e.addEventListener("dragstart", e => {
+		e.stopPropagation()
+		e.preventDefault()
+	})
+})
+
 const sounds = {
 	pad1: new Audio(`${assetUrl}pad1.mp3`),
 	pad2: new Audio(`${assetUrl}pad2.mp3`),
@@ -110,9 +121,9 @@ const waitPlayerTurn = (waiting) => {
 		: [...pads].forEach((pad) => (pad.disabled = false));
 };
 
-btnStart.addEventListener("click", startNewGame);
+btnStart.addEventListener("mousedown", startNewGame);
 
-btnSound.addEventListener("click", () => {
+btnSound.addEventListener("mousedown", () => {
 	if (btnSound.classList.contains("mute")) {
 		btnSound.classList.remove(cls.mute);
 		isAudioMuted = false;
@@ -122,7 +133,7 @@ btnSound.addEventListener("click", () => {
 	}
 });
 
-padsContainer.addEventListener("click", (e) => {
+padsContainer.addEventListener("mousedown", (e) => {
 	if (e.target.classList.contains("pad")) {
 		handlePadClick(e);
 	}
