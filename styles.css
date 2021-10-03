@@ -243,8 +243,7 @@ body {
 }
 
 .btn.start-game:hover{
-  color: #fadf2f;
-  
+  color: var(--highlight-color);
 }
 
 
