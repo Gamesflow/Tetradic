@@ -7,6 +7,8 @@ const colors = [...pads].map((pad) => pad.dataset.pad);
 const infoContainer = document.querySelector(".info-container");
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();
+const highScoreText = document.querySelector('.highscore-text')
+let highScore = localStorage.getItem("highScore") || 0;
 
 document.querySelectorAll("*").forEach(e => {
 	e.addEventListener("contextmenu", e => {
@@ -18,6 +20,8 @@ document.querySelectorAll("*").forEach(e => {
 		e.preventDefault()
 	})
 })
+
+highScoreText.innerHTML = `High Score: ${highScore}`
 
 let sounds = {}
 pads.forEach((pad,index) => {
@@ -65,8 +69,17 @@ const handlePadSound = (sound) => {
 	sounds[sound].play();
 };
 
+const setHighScore = () => {
+	if(sequence.length > highScore){
+		highScore = sequence.length; 
+		localStorage.setItem('highScore',highScore)
+	}
+	highScoreText.innerHTML = `High Score: ${highScore}`
+} 
+
 const endGame = () => {
 	waitPlayerTurn(true);
+	setHighScore()
 	updateInfoText(`Game over at level ${sequence.length}`);
 	padsContainer.classList.remove(cls.play);
 	btnStart.disabled = false;

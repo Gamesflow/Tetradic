@@ -271,6 +271,14 @@ body {
   display: block;
 }
 
+
+.highscore-text{
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  font-size: 1rem;
+}
+
 @media (min-width: 400px) {
   .pads-container {
     --pad-size: 35vmin;
