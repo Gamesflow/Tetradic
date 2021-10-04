@@ -123,15 +123,7 @@ const waitPlayerTurn = (waiting) => {
 
 btnStart.addEventListener("mousedown", startNewGame);
 
-btnSound.addEventListener("mousedown", () => {
-	if (btnSound.classList.contains("mute")) {
-		btnSound.classList.remove(cls.mute);
-		isAudioMuted = false;
-	} else {
-		btnSound.classList.add(cls.mute);
-		isAudioMuted = true;
-	}
-});
+btnSound.addEventListener("mousedown", () => isAudioMuted = btnSound.classList.toggle("mute"));
 
 padsContainer.addEventListener("mousedown", (e) => {
 	if (e.target.classList.contains("pad")) {
