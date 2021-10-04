@@ -19,13 +19,12 @@ document.querySelectorAll("*").forEach(e => {
 	})
 })
 
-const sounds = {
-	pad1: new Audio(`${assetUrl}pad1.mp3`),
-	pad2: new Audio(`${assetUrl}pad2.mp3`),
-	pad3: new Audio(`${assetUrl}pad3.mp3`),
-	pad4: new Audio(`${assetUrl}pad4.mp3`),
-	miss: new Audio(`${assetUrl}miss.mp3`)
-};
+let sounds = {}
+pads.forEach((pad,index) => {
+	index +=1;
+	sounds[`pad${index}`] = new Audio(`${assetUrl}pad${index}.mp3`);
+});
+sounds['miss'] = new Audio(`${assetUrl}miss.mp3`);
 
 const cls = {
 	active: "active",
