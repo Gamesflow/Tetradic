@@ -9,6 +9,26 @@ const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();
 const highScoreText = document.querySelector('.highscore-text')
 let highScore = localStorage.getItem("highScore") || 0;
+const checkbox = document.getElementById('checkbox');
+
+checkbox.addEventListener('change', ()=>{
+  document.body.classList.toggle('white');
+
+  if(document.body.classList.contains("white")) 
+  {
+	  highScoreText.style.color = "black";
+	  infoContainer.style.color = "black";
+	  document.getElementById("darkmode-text").style.color = "black";
+  }
+  else 
+  {
+	  highScoreText.style.color = "white";
+	  infoContainer.style.color = "white";
+	  document.getElementById("darkmode-text").style.color = "white";
+  }
+
+})
+
 
 document.querySelectorAll("*").forEach(e => {
 	e.addEventListener("contextmenu", e => {
