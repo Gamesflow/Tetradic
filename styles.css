@@ -200,7 +200,8 @@ body {
 
 .btn {
   color: white;
-  background-color: transparent;
+  background-color: black;
+  border-radius: 30px;
   border: 2px solid transparent;
   font-family: inherit;
   font-size: inherit;
@@ -257,6 +258,10 @@ body {
 .btn.sound-control svg {
   fill: currentcolor;
   width: 1.5rem;
+}
+
+.speaker .white{
+  fill: white;
 }
 
 .btn.sound-control .sound-off {
@@ -359,4 +364,61 @@ body {
     -ms-transform: scale(0.9);
     transform: scale(0.9);
   }
+}
+
+/* background colour switch css  */
+
+.switch {
+	position: absolute;
+  top: 0.5rem;
+  left: 9.5rem;
+  display: flex;
+  flex-flow: row wrap;
+}
+
+#darkmode-text{
+  font-size: 1rem;
+  margin-right: 15px;
+}
+
+body.white {
+  background-color: rgb(211, 209, 209);
+}
+
+.checkbox {
+  opacity: 0;
+  position: absolute;
+}
+
+.label {
+  width: 30px;
+  height: 20px;
+  background-color:rgb(92, 90, 90);
+  display: flex;
+  border-radius:50px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+  position: relative;
+  transform: scale(1.5);
+}
+
+.ball {
+  width: 15px;
+  height: 15px;
+  background-color: white;
+  position: absolute;
+  top: 2.5px;
+  left: 2.5px;
+  border-radius: 50%;
+  transition: transform 0.2s linear;
+}
+
+/*  target the elements */
+.checkbox:checked + .label .ball{
+  transform: translateX(10px);
+}
+
+.checkbox:checked + .label{
+  background-color:rgb(35, 214, 44); 
 }
